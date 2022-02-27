@@ -76,7 +76,7 @@ const displaySearchMeals = meals => {
         return;
     }
     meals.forEach(meal => {
-        // console.log(meal);
+        console.log(meal);
         const div = document.createElement('div');
         div.classList.add('col');
         const imgUrl = meal.strMealThumb;
@@ -106,20 +106,21 @@ const loadMealInfo = mealId => {
 }
 
 const displayMealInfo = meal => {
-    debugger;
+
     const mealInfoContainer = document.getElementById('meal-info');
     const div = document.createElement('div');
     mealInfoContainer.textContent = '';
     const imgUrl = meal.strMealThumb;
     const mealName = meal.strMeal;
     const mealInfo = meal.strInstructions;
+    const youtube = meal.strYoutube;
     div.innerHTML = `
         <div class="card mx-auto w-75">
             <img src="${imgUrl}" class="card-img-top mx-auto mt-3 info-img" alt="...">
             <div class="card-body">
                 <h5 class="card-title text-center">${mealName}</h5>
                 <p class="card-text">${mealInfo}</p>
-                <a href="#" class="btn btn-primary mx-auto">Watch recepie</a>
+                <a target="_blank" href="${youtube}" class="btn btn-primary mx-auto">Watch recepie</a>
             </div>
         </div>
     `;
