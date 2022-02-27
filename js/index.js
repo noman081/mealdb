@@ -28,20 +28,51 @@ const displayAllMeals = meals => {
     })
 }
 
+const toggleSpinner = displayText => {
+    document.getElementById('spinner').style.display = displayText;
+}
+
 const loadSearchMeal = () => {
+    toggleSpinner('block');
     const searchField = document.getElementById('search-text');
     const searchText = searchField.value;
-    const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchText}`;
-    console.log(url);
-    searchField.value = '';
-    document.getElementById('meals-container').textContent = '';
-    fetch(url)
-        .then(res => res.json())
-        .then(data => displaySearchMeals(data.meals));
+    if (!searchText) {
+        const mealsContainer = document.getElementById('meals-container');
+        mealsContainer.innerHTML = `
+                <div class="col">
+                </div>
+                <div class="col">
+                    <h1 class="text-center text-muted">Please enter meal name!</h1>
+                </div>
+            
+            `;
+        toggleSpinner('none');
+        return;
+    }
+    else {
+        const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchText}`;
+        console.log(url);
+        searchField.value = '';
+        document.getElementById('meals-container').textContent = ' ';
+        fetch(url)
+            .then(res => res.json())
+            .then(data => displaySearchMeals(data.meals));
+    }
 }
 const displaySearchMeals = meals => {
     const mealsContainer = document.getElementById('meals-container');
-
+    if (!meals) {
+        mealsContainer.innerHTML = `
+            <div class="col">
+            </div>
+            <div class="col">
+                <h1 class="text-center text-muted">Sorry. No meals found! :(</h1>
+            </div>
+        
+        `;
+        toggleSpinner('none');
+        return;
+    }
     meals.forEach(meal => {
         // console.log(meal);
         const div = document.createElement('div');
@@ -58,5 +89,6 @@ const displaySearchMeals = meals => {
             </div>
         `;
         mealsContainer.appendChild(div);
+        toggleSpinner('none');
     })
 }
