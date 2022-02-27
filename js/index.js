@@ -16,8 +16,9 @@ const displayAllMeals = meals => {
         const imgUrl = meal.strMealThumb;
         const mealName = meal.strMeal;
         const mealInfo = meal.strInstructions;
+        const mealId = meal.idMeal;
         div.innerHTML = `
-            <div class="card h-100">
+            <div onclick="loadMealInfo(${mealId})" class="card h-100">
                 <img src="${imgUrl}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">${mealName}</h5>
@@ -36,6 +37,7 @@ const loadSearchMeal = () => {
     toggleSpinner('block');
     const searchField = document.getElementById('search-text');
     const searchText = searchField.value;
+    mealInfoContainer = document.getElementById('meal-info').textContent = '';
     if (!searchText) {
         const mealsContainer = document.getElementById('meals-container');
         mealsContainer.innerHTML = `
@@ -80,8 +82,10 @@ const displaySearchMeals = meals => {
         const imgUrl = meal.strMealThumb;
         const mealName = meal.strMeal;
         const mealInfo = meal.strInstructions;
+        const mealId = meal.idMeal;
+        // console.log(mealId);
         div.innerHTML = `
-            <div class="card h-100">
+            <div onclick= "loadMealInfo(${mealId})" class="card h-100">
                 <img src="${imgUrl}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">${mealName}</h5>
@@ -91,4 +95,33 @@ const displaySearchMeals = meals => {
         mealsContainer.appendChild(div);
         toggleSpinner('none');
     })
+}
+
+const loadMealInfo = mealId => {
+    const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`;
+    console.log(url);
+    fetch(url)
+        .then(res => res.json())
+        .then(data => displayMealInfo(data.meals[0]));
+}
+
+const displayMealInfo = meal => {
+    debugger;
+    const mealInfoContainer = document.getElementById('meal-info');
+    const div = document.createElement('div');
+    mealInfoContainer.textContent = '';
+    const imgUrl = meal.strMealThumb;
+    const mealName = meal.strMeal;
+    const mealInfo = meal.strInstructions;
+    div.innerHTML = `
+        <div class="card mx-auto w-75">
+            <img src="${imgUrl}" class="card-img-top mx-auto mt-3 info-img" alt="...">
+            <div class="card-body">
+                <h5 class="card-title text-center">${mealName}</h5>
+                <p class="card-text">${mealInfo}</p>
+                <a href="#" class="btn btn-primary mx-auto">Watch recepie</a>
+            </div>
+        </div>
+    `;
+    mealInfoContainer.appendChild(div);
 }
