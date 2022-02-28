@@ -1,4 +1,10 @@
+const toggleSpinner = displayText => {
+    document.getElementById('spinner').style.display = displayText;
+}
 const loadAllMeals = () => {
+    toggleSpinner('block');
+    document.getElementById('meals-container').textContent = '';
+    document.getElementById('meal-info').textContent = '';
     fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         .then(res => res.json())
         .then(data => displayAllMeals(data.meals));
@@ -27,10 +33,7 @@ const displayAllMeals = meals => {
         `;
         mealsContainer.appendChild(div);
     })
-}
-
-const toggleSpinner = displayText => {
-    document.getElementById('spinner').style.display = displayText;
+    toggleSpinner('none');
 }
 
 const loadSearchMeal = () => {
@@ -125,4 +128,37 @@ const displayMealInfo = meal => {
         </div>
     `;
     mealInfoContainer.appendChild(div);
+}
+
+//load beef
+const loadCatagories = category => {
+    toggleSpinner('block');
+    document.getElementById('meals-container').textContent = '';
+    document.getElementById('meal-info').textContent = '';
+    const url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`;
+    fetch(url)
+        .then(res => res.json())
+        .then(data => displayBeef(data.meals));
+
+}
+const displayBeef = meals => {
+    const mealsContainer = document.getElementById('meals-container');
+
+    meals.forEach(meal => {
+        // console.log(meal);
+        const div = document.createElement('div');
+        div.classList.add('col');
+        const imgUrl = meal.strMealThumb;
+        const mealName = meal.strMeal;
+        const mealId = meal.idMeal;
+        div.innerHTML = `
+            <div onclick="loadMealInfo(${mealId})" class="card h-100">
+                <img src="${imgUrl}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">${mealName}</h5>
+            </div>
+        `;
+        mealsContainer.appendChild(div);
+    })
+    toggleSpinner('none');
 }
